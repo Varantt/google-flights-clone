@@ -1,14 +1,30 @@
 :root {
   --body-text: #9aa0a6;
   --heading-text: #e8eaed;
-  --field-text : #bdc1c6;
+  --field-text: #bdc1c6;
+
   --heading-weight: 500;
   --body-bg: #202124;
-  --body-font-family: Roboto,"Helvetica Neue",Arial,sans-serif;
-  --heading-font-family: "Product Sans",Roboto,"Helvetica Neue",Arial,sans-seriff;
+  --body-font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
+  --heading-font-family: "Product Sans", Roboto, "Helvetica Neue", Arial,
+    sans-serif;
   //max width
   --max-width: 1248px;
+  --flight-search-max-width: 1024px;
 
+  //border radius
+  --border-radius-default: 8px;
+
+  //fields
   --field-font-size: 0.875rem;
-  
+  --field-hover-bg : #4e5769;
+
+  //grey
+  --color-grey: #70757a;
+  --border-color-grey: #5f6368;
+  --icon-color-grey: var(--body-text);
+  --bg-primary: #36373b;
+
+  //shadow
+  --shadow-md: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 4px 8px 3px rgba(0, 0, 0, 0.15);
 }

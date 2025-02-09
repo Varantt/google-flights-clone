@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 // Context Props
 interface ContextProps {
   title: string;
-  handleTicketTypeChange: (event: SelectChangeEvent) => void;
+  handleTicketTypeChange: (event: SelectChangeEvent<string>) => void;
   initialSearchState: SearchState
 }
 
@@ -22,13 +22,13 @@ interface HeaderProps {
 // Flight Search Component Props
 interface SearchState {
   ticketType: string;
-  numberOfPassengers: number;
+  passengersCount: string;
   seatingClass: string;
 }
 
 type SearchActionType =
   | { type: "setTicketType"; payload: string }
-  | { type: "setNumberOfPassengers"; payload: number }
+  | { type: "setNumberOfPassengers"; payload: string }
   | { type: "setSeatingClass"; payload: string };
 
 export type {

@@ -14,7 +14,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   // Flight Search Fields Iniitial State
   const initialSearchState: SearchState = {
     ticketType: "",
-    numberOfPassengers: 1,
+    passengersCount: "1",
     seatingClass: "",
   };
 
@@ -23,7 +23,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       case "setTicketType":
         return { ...searchState, ticketType: action.payload };
       case "setNumberOfPassengers":
-        return { ...searchState, numberOfPassengers: action.payload };
+        return { ...searchState, passengersCount: action.payload };
       case "setSeatingClass":
         return { ...searchState, seatingClass: action.payload };
       default:
@@ -32,15 +32,15 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   }
   const [searchState, dispatch] = useReducer(searchReducer, initialSearchState);
 
-  const handleTicketTypeChange = (event: SelectChangeEvent) => {
+  const handleTicketTypeChange = (event: SelectChangeEvent<string>) => {
     dispatch({ type: "setTicketType", payload: event.target.value });
-    // dispatch({ type: "numberOfPassengers", payload: event.target.value });
+    // dispatch({ type: "passengersCount", payload: event.target.value });
     // dispatch({ type: "seatingClass", payload: event.target.value });
   };
   const contextValue: ContextProps = {
     title,
     initialSearchState,
-    handleTicketTypeChange
+    handleTicketTypeChange,
   };
 
   return React.createElement(
