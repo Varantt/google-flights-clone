@@ -4,8 +4,11 @@ import { ReactNode } from "react";
 // Context Props
 interface ContextProps {
   title: string;
-  handleTicketTypeChange: (event: SelectChangeEvent<string>) => void;
-  initialSearchState: SearchState;
+  handleChange: (
+    event: SelectChangeEvent<string>,
+    type: SearchActionTypes
+  ) => void;
+  searchState: SearchState;
 }
 
 interface AppProviderProps {
@@ -25,6 +28,8 @@ interface SearchState {
   passengersCount: string;
   seatingClass: string;
 }
+
+type SearchActionTypes = "setTicketType" | "setNumberOfPassengers" | "setSeatingClass";
 
 type SearchActionType =
   | { type: "setTicketType"; payload: string }
@@ -51,7 +56,8 @@ export type {
   HeaderProps,
   SearchState,
   SearchActionType,
+  SearchActionTypes,
   TicketType,
   TicketField,
-  SeatingClassField,
+  SeatingClassField
 };

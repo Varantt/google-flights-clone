@@ -7,12 +7,14 @@ import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import CheckIcon from "@mui/icons-material/Check";
 import { useAppContext } from "@/context/AppContext";
 import {
   ticketTypes,
-  passengersCount,
-  seatingClass,
+  passengersCount as passengerOptions,
+  seatingClass as seatingClasses,
 } from "@/config/flightSearchData";
+import { SeatingClassField } from "@/types/types";
 
 const BorderlessSelect = styled(Select<string>)({
   "& .MuiSelect-root": {
@@ -21,7 +23,7 @@ const BorderlessSelect = styled(Select<string>)({
   },
   "& .MuiSelect-select": {
     padding: "0",
-    paddingRight: "44px !important",
+    paddingRight: "40px !important",
     fontSize: "14px",
     display: "flex",
     alignItems: "center",
@@ -35,9 +37,7 @@ const BorderlessSelect = styled(Select<string>)({
   "& .MuiOutlinedInput-notchedOutline": { border: "none" },
   "&:hover .MuiOutlinedInput-notchedOutline": { border: "none" },
   "&.Mui-focused .MuiOutlinedInput-notchedOutline": { border: "none" },
-  "& .MuiSelect-icon": {
-    right: "5px",
-  },
+  
 });
 
 const menuProps = {
@@ -51,7 +51,8 @@ const menuProps = {
           backgroundColor: "rgba(255, 255, 255, 0.08)",
         },
         "&.Mui-selected": {
-          backgroundColor: "rgba(255, 255, 255, 0.16)",
+          backgroundColor: "#394457 !important",
+          gap: "12px",
           "&:hover": {
             backgroundColor: "rgba(255, 255, 255, 0.24)",
           },
@@ -61,7 +62,6 @@ const menuProps = {
   },
 };
 
-// Helper function to get the correct icon component
 const getIconComponent = (iconName: string) => {
   switch (iconName) {
     case "SyncAltIcon":
@@ -76,7 +76,9 @@ const getIconComponent = (iconName: string) => {
 };
 
 export const FlightSearch: React.FC = () => {
-  const { initialSearchState, handleTicketTypeChange } = useAppContext();
+  const { searchState, handleChange } = useAppContext();
+  const { ticketType, passengersCount, seatingClass } = searchState;
+
 
   return (
     <div className="flight-search-wrapper flight-search-max-width">
@@ -88,20 +90,25 @@ export const FlightSearch: React.FC = () => {
               <div className="field">
                 {getIconComponent(
                   ticketTypes.find(
-                    (type) =>
-                      type.id ===
-                      (initialSearchState.ticketType || "round-trip")
+                    (type) => type.id === (ticketType || "round-trip")
                   )?.icon || "SyncAltIcon"
                 )}
                 <BorderlessSelect
-                  value={initialSearchState.ticketType || "round-trip"}
+                  value={ticketType || "round-trip"}
                   onChange={(event: SelectChangeEvent<string>) =>
-                    handleTicketTypeChange(event)
+                    handleChange(event, "setTicketType")
                   }
                   MenuProps={menuProps}
+                  renderValue={(value) => {
+                    const selectedType = ticketTypes.find(
+                      (type) => type.id === value
+                    );
+                    return selectedType?.label || "Round Trip";
+                  }}
                 >
                   {ticketTypes.map((type) => (
                     <MenuItem key={type.id} value={type.id}>
+                      {type.id === ticketType && <CheckIcon />}
                       {type.label}
                     </MenuItem>
                   ))}
@@ -113,11 +120,16 @@ export const FlightSearch: React.FC = () => {
                 <PersonOutlineIcon />
                 <BorderlessSelect
                   MenuProps={menuProps}
-                  value={initialSearchState.passengersCount || "1"}
+                  value={passengersCount || "1"}
                   displayEmpty
+                  renderValue={(value) => value}
+                  onChange={(event: SelectChangeEvent<string>) =>
+                    handleChange(event, "setNumberOfPassengers")
+                  }
                 >
-                  {passengersCount.map((count) => (
+                  {passengerOptions.map((count: string) => (
                     <MenuItem key={count} value={count}>
+                      {count === passengersCount && <CheckIcon />}
                       {count}
                     </MenuItem>
                   ))}
@@ -125,14 +137,24 @@ export const FlightSearch: React.FC = () => {
               </div>
 
               {/* Seating Class */}
-              <div className="field" style = {{paddingLeft: "14px"}}>
+              <div className="field" style={{ paddingLeft: "14px" }}>
                 <BorderlessSelect
                   MenuProps={menuProps}
-                  value={initialSearchState.seatingClass || "economy"}
+                  value={seatingClass || "economy"}
                   displayEmpty
+                  onChange={(event: SelectChangeEvent<string>) =>
+                    handleChange(event, "setSeatingClass")
+                  }
+                  renderValue={(value) => {
+                    const selectedClass = seatingClasses.find(
+                      (seat) => seat.id === value
+                    );
+                    return selectedClass?.label || "Economy";
+                  }}
                 >
-                  {seatingClass.map((seat) => (
+                  {seatingClasses.map((seat: SeatingClassField) => (
                     <MenuItem key={seat.id} value={seat.id}>
+                      {seat.id === seatingClass && <CheckIcon />}
                       {seat.label}
                     </MenuItem>
                   ))}

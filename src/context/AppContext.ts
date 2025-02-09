@@ -3,6 +3,7 @@ import {
   AppProviderProps,
   ContextProps,
   SearchActionType,
+  SearchActionTypes,
   SearchState,
 } from "@app/types/types";
 import { SelectChangeEvent } from "@mui/material/Select";
@@ -13,14 +14,15 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const title = "Flights";
   // Flight Search Fields Iniitial State
   const initialSearchState: SearchState = {
-    ticketType: "",
+    ticketType: "round-trip",
     passengersCount: "1",
-    seatingClass: "",
+    seatingClass: "economy",
   };
 
   function searchReducer(searchState: SearchState, action: SearchActionType) {
     switch (action.type) {
       case "setTicketType":
+        console.log("HELLO", action.payload);
         return { ...searchState, ticketType: action.payload };
       case "setNumberOfPassengers":
         return { ...searchState, passengersCount: action.payload };
@@ -32,15 +34,14 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   }
   const [searchState, dispatch] = useReducer(searchReducer, initialSearchState);
 
-  const handleTicketTypeChange = (event: SelectChangeEvent<string>) => {
-    dispatch({ type: "setTicketType", payload: event.target.value });
-    // dispatch({ type: "passengersCount", payload: event.target.value });
-    // dispatch({ type: "seatingClass", payload: event.target.value });
+  const handleChange = (event: SelectChangeEvent, type: SearchActionTypes) => {
+    dispatch({ type, payload: event.target.value });
   };
+
   const contextValue: ContextProps = {
     title,
-    initialSearchState,
-    handleTicketTypeChange,
+    searchState,
+    handleChange,
   };
 
   return React.createElement(
