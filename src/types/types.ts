@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 interface ContextProps {
   title: string;
   handleTicketTypeChange: (event: SelectChangeEvent<string>) => void;
-  initialSearchState: SearchState
+  initialSearchState: SearchState;
 }
 
 interface AppProviderProps {
@@ -31,10 +31,27 @@ type SearchActionType =
   | { type: "setNumberOfPassengers"; payload: string }
   | { type: "setSeatingClass"; payload: string };
 
+type TicketType = "round-trip" | "one-way" | "multi-city";
+type SeatingClass = "economy" | "premium-economy" | "business" | "first";
+
+interface TicketField {
+  id: TicketType;
+  name: TicketType;
+  icon: string;
+  label: string;
+}
+interface SeatingClassField {
+  id: SeatingClass;
+  name: SeatingClass;
+  label: string;
+}
 export type {
   ContextProps,
   AppProviderProps,
   HeaderProps,
   SearchState,
   SearchActionType,
+  TicketType,
+  TicketField,
+  SeatingClassField,
 };

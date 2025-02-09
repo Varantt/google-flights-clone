@@ -13,36 +13,44 @@
 
     .flight-search-container {
       .flight-search-header {
-        .MuiSelect-root {
-          height: 36px;
-          box-sizing: border-box;
-
-          .MuiSelect-select {
-            padding-block: 0;
-          }
-        }
+       
+        
 
         .fields-container {
           display: flex;
           align-items: center;
-          gap: 8px;
+          gap: 4px;
           margin-bottom: 8px;
           .field {
             display: flex;
             align-items: center;
             margin-right: 4px;
             min-width: 56px;
+            height: 48px;
+            border-radius: var(--border-radius-sm);
+
+            svg {
+              margin: 0 8px;
+              width: 20px;
+              height: 20px;
+              font-size: 20px;
+            }
+
+            &:hover {
+              background-color: var(--bg-field-hover);
+            }
+
+            &:active {
+              background-color: var(--bg-field-active);
+            }
           }
         }
 
         .field > div {
           color: var(--field-text);
-          font-weight: 500;
           font-size: var(--field-font-size);
           font-style: normal;
         }
-
-        
       }
     }
   }
