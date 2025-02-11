@@ -76,10 +76,11 @@ const getIconComponent = (iconName: string) => {
 };
 
 export const FlightSearch: React.FC = () => {
-  const { searchState, handleChange, latitude, longitude, getUserLocation } = useAppContext();
+  const { searchState, handleChange, latitude, longitude, getUserLocation } =
+    useAppContext();
   const { ticketType, passengersCount, seatingClass } = searchState;
-  const { data, loading, error, fetchData } = useFetch();
-  console.log(longitude, latitude)
+  const { fetchData } = useFetch();
+  console.log(longitude, latitude);
   useEffect(() => {
     try {
       getUserLocation();
@@ -93,6 +94,8 @@ export const FlightSearch: React.FC = () => {
           },
         }
       );
+
+      console.log(response);
     } catch (err) {
       console.error("Error fetching airports:", err);
     }

@@ -36,47 +36,27 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   const [longitude, setLongitude] = useState<number | null>(null);
   const [latitude, setLatitude] = useState<number | null>(null);
-  const [error, setError] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-
   const handleChange = (event: SelectChangeEvent, type: SearchActionTypes) => {
     dispatch({ type, payload: event.target.value });
   };
 
   const getUserLocation = () => {
-    setLoading(true);
-    setError("null");
-
-    // Check if running on HTTPS or localhost
-    if (
-      window.location.protocol !== "https:" &&
-      window.location.hostname !== "localhost" &&
-      window.location.hostname !== "127.0.0.1"
-    ) {
-      setError("Geolocation requires HTTPS or localhost");
-      setLoading(false);
-      return;
-    }
     if ("geolocation" in navigator) {
+      console.log(navigator.geolocation);
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setLatitude(position.coords.latitude);
-          setLongitude(position.coords.longitude);
-          setLoading(false);
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+
+          setLongitude(longitude);
+          setLatitude(latitude);
         },
         (error) => {
-          setError(error.message);
-          setLoading(false);
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 5000,
-          maximumAge: 0,
+          console.error("Error getting location:", error);
         }
       );
     } else {
-      setError("Geolocation is not supported by your browser");
-      setLoading(false);
+      console.log("Geolocation is not supported");
     }
   };
 
@@ -86,7 +66,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     handleChange,
     longitude,
     latitude,
-    getUserLocation,
+    getUserLocation
   };
 
   return React.createElement(

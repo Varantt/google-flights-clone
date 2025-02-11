@@ -4,7 +4,6 @@ import "./Header.scss";
 
 export const Header: React.FC<HeaderProps> = ({
   title = "Flights",
-  lightImage,
   darkImage,
 }) => {
   return (
@@ -16,7 +15,7 @@ export const Header: React.FC<HeaderProps> = ({
             role="presentation"
             style={{
               backgroundImage: `url(${darkImage})`,
-              height: "298.58px",
+            height: "298.58px",
             }}
             data-dark-image={darkImage}
           />
