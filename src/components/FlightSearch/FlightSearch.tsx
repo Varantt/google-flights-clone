@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./FlightSearch.scss";
 import { styled } from "@mui/material/styles";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
@@ -14,8 +14,9 @@ import {
   passengersCount as passengerOptions,
   seatingClass as seatingClasses,
 } from "@/config/flightSearchData";
-import { SeatingClassField } from "@/types/types";
+import { AirportOption, SeatingClassField } from "@/types/types";
 import { useFetch } from "@/hooks/useFetch";
+import { Autocomplete, TextField } from "@mui/material";
 
 const BorderlessSelect = styled(Select<string>)({
   "& .MuiSelect-root": {
@@ -74,32 +75,49 @@ const getIconComponent = (iconName: string) => {
       return null;
   }
 };
-
 export const FlightSearch: React.FC = () => {
   const { searchState, handleChange, latitude, longitude, getUserLocation } =
     useAppContext();
   const { ticketType, passengersCount, seatingClass } = searchState;
   const { fetchData } = useFetch();
+
+  const [currentAirport, setCurrentAirport] = useState<string>("");
+  const [nearbyAirports, setNearbyAirports] = useState<AirportOption[]>([]);
   console.log(longitude, latitude);
   useEffect(() => {
-    try {
-      getUserLocation();
-      const response = fetchData(
-        `https://sky-scrapper.p.rapidapi.com/api/v1/flights/getNearByAirports?lat=${latitude}&lng=${longitude}`,
-        {
-          headers: {
-            "x-rapidapi-key":
-              import.meta.env.VITE_RAPID_API_KEY,
-            "x-rapidapi-host": "sky-scrapper.p.rapidapi.com",
-          },
-        }
-      );
+    const fetchNearbyAirports = async () => {
+      try {
+        // Check if we have latitude and longitude
+        if (!latitude || !longitude) return;
 
-      console.log(response);
-    } catch (err) {
-      console.error("Error fetching airports:", err);
+        const response = await fetchData(
+          `https://sky-scrapper.p.rapidapi.com/api/v1/flights/getNearByAirports?lat=${latitude}&lng=${longitude}`,
+          {
+            headers: {
+              "x-rapidapi-key": import.meta.env.VITE_RAPID_API_KEY,
+              "x-rapidapi-host": "sky-scrapper.p.rapidapi.com",
+            },
+          }
+        );
+        const currentAirport: string =
+          response.data.current.presentation.suggestionTitle;
+        console.log(currentAirport);
+        setCurrentAirport(currentAirport);
+        setNearbyAirports(response.data.nearby);
+        console.log(response);
+      } catch (err) {
+        console.error("Error fetching airports:", err);
+      }
+    };
+
+    // Get location first
+    getUserLocation();
+
+    // Only fetch airports if we have coordinates
+    if (latitude && longitude) {
+      fetchNearbyAirports();
     }
-  }, []);
+  }, [latitude, longitude]); // Add these as dependencies
 
   return (
     <div className="flight-search-wrapper flight-search-max-width">
@@ -181,6 +199,47 @@ export const FlightSearch: React.FC = () => {
                   ))}
                 </BorderlessSelect>
               </div>
+            </div>
+          </div>
+
+          <div className="flight-search-data-container">
+            <div className="AutoComplete">
+              <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                options={nearbyAirports}
+                sx={{ width: 300 }}
+                getOptionLabel={(option: AirportOption) =>
+                  option.presentation.suggestionTitle
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Search Airports"
+                    value={currentAirport}
+                    placeholder="Enter city or airport"
+                  />
+                )}
+              />
+            </div>
+            <div className="AutoComplete">
+              <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                options={nearbyAirports}
+                sx={{ width: 300 }}
+                getOptionLabel={(option: AirportOption) =>
+                  option.presentation.suggestionTitle
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Search Airports"
+                    value={currentAirport}
+                    placeholder="Enter city or airport"
+                  />
+                )}
+              />
             </div>
           </div>
         </div>

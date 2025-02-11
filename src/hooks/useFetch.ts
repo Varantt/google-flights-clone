@@ -1,5 +1,6 @@
 import { FetchState, UseFetchOptions } from "@/types/types";
 import { useState, useEffect, useCallback, useRef } from "react";
+import useAutocomplete from "@mui/material/useAutocomplete";
 
 export function useFetch<T>() {
   const [state, setState] = useState<FetchState<T>>({

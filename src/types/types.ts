@@ -32,7 +32,10 @@ interface SearchState {
   seatingClass: string;
 }
 
-type SearchActionTypes = "setTicketType" | "setNumberOfPassengers" | "setSeatingClass";
+type SearchActionTypes =
+  | "setTicketType"
+  | "setNumberOfPassengers"
+  | "setSeatingClass";
 
 type SearchActionType =
   | { type: "setTicketType"; payload: string }
@@ -66,6 +69,25 @@ interface UseFetchOptions {
   method?: "GET" | "POST" | "PUT" | "DELETE";
 }
 
+// Airports
+
+
+
+interface AirportOption {
+  presentation: AirportPresentationLabels;
+  navigation: AirportNavigationLabels;
+}
+
+interface AirportPresentationLabels {
+  title: string;
+  suggestionTitle: string;
+  subtitle: string;
+}
+interface AirportNavigationLabels {
+  entitiyId: string;
+  entityType: "AIRPORT" | "CITY";
+  localizedName: string
+}
 export type {
   ContextProps,
   AppProviderProps,
@@ -77,5 +99,6 @@ export type {
   TicketField,
   SeatingClassField,
   FetchState,
-  UseFetchOptions
+  UseFetchOptions,
+  AirportOption
 };
