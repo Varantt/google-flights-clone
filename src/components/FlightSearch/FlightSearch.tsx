@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./FlightSearch.scss";
 import { styled } from "@mui/material/styles";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
@@ -15,6 +15,7 @@ import {
   seatingClass as seatingClasses,
 } from "@/config/flightSearchData";
 import { SeatingClassField } from "@/types/types";
+import { useFetch } from "@/hooks/useFetch";
 
 const BorderlessSelect = styled(Select<string>)({
   "& .MuiSelect-root": {
@@ -37,7 +38,6 @@ const BorderlessSelect = styled(Select<string>)({
   "& .MuiOutlinedInput-notchedOutline": { border: "none" },
   "&:hover .MuiOutlinedInput-notchedOutline": { border: "none" },
   "&.Mui-focused .MuiOutlinedInput-notchedOutline": { border: "none" },
-  
 });
 
 const menuProps = {
@@ -76,9 +76,27 @@ const getIconComponent = (iconName: string) => {
 };
 
 export const FlightSearch: React.FC = () => {
-  const { searchState, handleChange } = useAppContext();
+  const { searchState, handleChange, latitude, longitude, getUserLocation } = useAppContext();
   const { ticketType, passengersCount, seatingClass } = searchState;
-
+  const { data, loading, error, fetchData } = useFetch();
+  console.log(longitude, latitude)
+  useEffect(() => {
+    try {
+      getUserLocation();
+      const response = fetchData(
+        "https://sky-scrapper.p.rapidapi.com/api/v1/flights/getNearByAirports?lat=19.242218017578125&lng=72.85846156046128",
+        {
+          headers: {
+            "x-rapidapi-key":
+              "f13b77b877mshe628a33ceeb6755p12e6c3jsnbb8c0c2e5bc1",
+            "x-rapidapi-host": "sky-scrapper.p.rapidapi.com",
+          },
+        }
+      );
+    } catch (err) {
+      console.error("Error fetching airports:", err);
+    }
+  }, []);
 
   return (
     <div className="flight-search-wrapper flight-search-max-width">

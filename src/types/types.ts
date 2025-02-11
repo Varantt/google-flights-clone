@@ -4,11 +4,14 @@ import { ReactNode } from "react";
 // Context Props
 interface ContextProps {
   title: string;
+  longitude: number | null;
+  latitude: number | null;
   handleChange: (
     event: SelectChangeEvent<string>,
     type: SearchActionTypes
   ) => void;
   searchState: SearchState;
+  getUserLocation: () => void;
 }
 
 interface AppProviderProps {
@@ -50,6 +53,19 @@ interface SeatingClassField {
   name: SeatingClass;
   label: string;
 }
+
+interface FetchState<T> {
+  data: T | null;
+  loading: boolean;
+  error: Error | null;
+}
+
+interface UseFetchOptions {
+  immediate?: boolean;
+  headers?: HeadersInit;
+  method?: "GET" | "POST" | "PUT" | "DELETE";
+}
+
 export type {
   ContextProps,
   AppProviderProps,
@@ -59,5 +75,7 @@ export type {
   SearchActionTypes,
   TicketType,
   TicketField,
-  SeatingClassField
+  SeatingClassField,
+  FetchState,
+  UseFetchOptions
 };
