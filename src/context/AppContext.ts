@@ -41,24 +41,38 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   };
 
   const getUserLocation = () => {
+
     if ("geolocation" in navigator) {
-      console.log(navigator.geolocation);
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
-
-          console.log(position);
-
-          setLongitude(longitude);
-          setLatitude(latitude);
+          setLatitude(position.coords.latitude);
+          setLongitude(position.coords.longitude);
         },
         (error) => {
-          console.error("Error getting location:", error);
+          if (error.code === 1) {
+            // PERMISSION_DENIED
+            fallbackToIPLocation();
+          } 
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0,
         }
       );
-    } else {
-      console.log("Geolocation is not supported");
+    }
+  };
+
+  // Fallback function using IP-based geolocation
+  const fallbackToIPLocation = async () => {
+    try {
+      const response = await fetch("https://ipapi.co/json/");
+      const data = await response.json();
+
+      setLatitude(data.latitude);
+      setLongitude(data.longitude);
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -68,7 +82,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     handleChange,
     longitude,
     latitude,
-    getUserLocation
+    getUserLocation,
   };
 
   return React.createElement(

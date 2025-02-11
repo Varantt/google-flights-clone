@@ -85,11 +85,11 @@ export const FlightSearch: React.FC = () => {
     try {
       getUserLocation();
       const response = fetchData(
-        "https://sky-scrapper.p.rapidapi.com/api/v1/flights/getNearByAirports?lat=19.242218017578125&lng=72.85846156046128",
+        `https://sky-scrapper.p.rapidapi.com/api/v1/flights/getNearByAirports?lat=${latitude}&lng=${longitude}`,
         {
           headers: {
             "x-rapidapi-key":
-              "f13b77b877mshe628a33ceeb6755p12e6c3jsnbb8c0c2e5bc1",
+              import.meta.env.VITE_RAPID_API_KEY,
             "x-rapidapi-host": "sky-scrapper.p.rapidapi.com",
           },
         }
