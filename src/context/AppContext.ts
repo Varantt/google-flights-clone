@@ -48,6 +48,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
 
+          console.log(position);
+
           setLongitude(longitude);
           setLatitude(latitude);
         },
